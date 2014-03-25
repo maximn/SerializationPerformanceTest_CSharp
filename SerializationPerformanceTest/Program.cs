@@ -10,7 +10,7 @@ using SerializationPerformanceTest.Testers;
 namespace SerializationPerformanceTest
 {
 
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {
@@ -52,6 +52,9 @@ namespace SerializationPerformanceTest
 
                 GC.Collect();
             }
+
+            Console.WriteLine("Done.");
+            Console.ReadKey();
         }
     }
 }
