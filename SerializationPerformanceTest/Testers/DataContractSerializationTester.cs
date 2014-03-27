@@ -7,47 +7,29 @@ using Newtonsoft.Json;
 
 namespace SerializationPerformanceTest.Testers
 {
-    class DataContractSerializationTester<TTestObject> : SerializationTester<TTestObject>, IDisposable
+    class DataContractSerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private DataContractSerializer serializer;
-        private MemoryStream memoryStream;
+        private readonly DataContractSerializer serializer;
 
-
-        public DataContractSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
-        {
-        }
-
-        protected override void Init()
+        public DataContractSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
             serializer = new DataContractSerializer(typeof(TTestObject));
-
-            memoryStream = new MemoryStream();
-
-            using (var fileStream = new FileStream(base.SourceDataFilename, FileMode.Open))
-            {
-                fileStream.CopyTo(memoryStream);
-            }
         }
 
         protected override TTestObject Deserialize()
         {
-            memoryStream.Seek(0, 0);
-            return (TTestObject)serializer.ReadObject(memoryStream);
+            base.MemoryStream.Seek(0, 0);
+            return (TTestObject)serializer.ReadObject(base.MemoryStream);
         }
         
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
 
-            serializer.WriteObject(stream, obj);
+            serializer.WriteObject(stream, base.TestObject);
 
             return stream;
-        }
-
-        public void Dispose()
-        {
-            memoryStream.Dispose();
         }
     }
 }

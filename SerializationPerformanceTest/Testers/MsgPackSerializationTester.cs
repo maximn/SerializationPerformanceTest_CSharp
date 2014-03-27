@@ -8,32 +8,26 @@ namespace SerializationPerformanceTest.Testers
 {
     class MsgPackSerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private MessagePackSerializer<TTestObject> serializer;
-        private byte[] data;
+        private readonly MessagePackSerializer<TTestObject> serializer;
 
 
-        public MsgPackSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
+        public MsgPackSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
+            serializer = MessagePackSerializer.Create<TTestObject>();            
         }
 
-        protected override void Init()
-        {
-            serializer = MessagePackSerializer.Create<TTestObject>();
-            data = File.ReadAllBytes(base.SourceDataFilename);
-        }
 
         protected override TTestObject Deserialize()
         {
-            return serializer.UnpackSingleObject(data);
+            base.MemoryStream.Position = 0;
+            return serializer.Unpack(base.MemoryStream);
         }
         
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
-            
-            serializer.Pack(stream, obj);
-
+            serializer.Pack(stream, base.TestObject);
             return stream;
         }
 

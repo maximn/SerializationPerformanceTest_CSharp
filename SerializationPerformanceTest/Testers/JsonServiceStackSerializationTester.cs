@@ -5,34 +5,43 @@ namespace SerializationPerformanceTest.Testers
 {
     class JsonServiceStackSerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private string text;
-        private TypeSerializer<TTestObject> serializer;
+        private readonly TypeSerializer<TTestObject> serializer;
+        private StreamReader streamReader;
 
 
-        public JsonServiceStackSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
+        public JsonServiceStackSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
+            serializer = new TypeSerializer<TTestObject>();
         }
 
         protected override void Init()
         {
-            text = File.ReadAllText(this.SourceDataFilename);
-            serializer = new TypeSerializer<TTestObject>();
+            base.Init();
+
+            streamReader = new StreamReader(this.MemoryStream);
         }
 
         protected override TTestObject Deserialize()
         {
-            return serializer.DeserializeFromString(text);
+            base.MemoryStream.Position = 0;
+            return serializer.DeserializeFromReader(this.streamReader);
         }
 
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
-            serializer.SerializeToWriter(obj, streamWriter);
+            serializer.SerializeToWriter(base.TestObject, streamWriter);
             streamWriter.Flush();
 
             return stream;
+        }
+
+        public override void Dispose()
+        {
+            this.streamReader.Dispose();
+            base.Dispose();
         }
     }
 }

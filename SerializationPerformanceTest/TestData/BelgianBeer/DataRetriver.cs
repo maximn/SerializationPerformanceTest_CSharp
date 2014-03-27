@@ -8,8 +8,19 @@ using HtmlAgilityPack;
 
 namespace SerializationPerformanceTest.TestData.BelgianBeer
 {
-    public class DataRetriever
+    public static class BelgianBeerDataRetriever
     {
+        public static List<Beer> GetDataFromXML()
+        {
+            var serializer = new XmlSerializer(typeof(List<Beer>));
+            using (var fs = new FileStream(@".\..\..\TestData\BelgianBeer\Data\beers.xml", FileMode.Open))
+            {
+                var deserialize = serializer.Deserialize(fs);
+                return (List<Beer>) deserialize;
+            }
+        }
+
+
         public static List<Beer> GetDataFromWikipedia()
         {
             HtmlDocument htmlDocument = new HtmlDocument();

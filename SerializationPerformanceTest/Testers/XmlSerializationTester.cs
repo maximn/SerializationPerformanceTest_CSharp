@@ -9,47 +9,28 @@ using System.Xml.Serialization;
 
 namespace SerializationPerformanceTest.Testers
 {
-    class XmlSerializationTester<TTestObject> : SerializationTester<TTestObject>, IDisposable
-    {
-        private XmlSerializer serializer;
-        private MemoryStream memoryStream;
+    class XmlSerializationTester<TTestObject> : SerializationTester<TTestObject>{
+        private readonly XmlSerializer serializer;
 
-        public XmlSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
-        {
-        }
-
-        protected override void Init()
+        public XmlSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
             serializer = new XmlSerializer(typeof(TTestObject));
-            memoryStream = new MemoryStream();
-
-            using (var fileStream = new FileStream(base.SourceDataFilename, FileMode.Open))
-            {
-                fileStream.CopyTo(memoryStream);
-            }
+            
         }
-
 
         protected override TTestObject Deserialize()
         {
-            memoryStream.Seek(0, 0);
-
-            var deserialize = (TTestObject)serializer.Deserialize(memoryStream);
+            base.MemoryStream.Seek(0, 0);
+            var deserialize = (TTestObject)serializer.Deserialize(base.MemoryStream);
             return deserialize;
         }
 
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
-            serializer.Serialize(stream, obj);
-
+            serializer.Serialize(stream, base.TestObject);
             return stream;
-        }
-
-        public void Dispose()
-        {
-            memoryStream.Dispose();            
         }
     }
 }

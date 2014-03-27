@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -9,34 +10,44 @@ namespace SerializationPerformanceTest.Testers
 {
     class JsonNewtonsoftSerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private string text;
-        private JsonSerializer jsonSerializer;
+        private readonly JsonSerializer jsonSerializer;
+        private StreamReader streamReader;
 
 
-        public JsonNewtonsoftSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
+        public JsonNewtonsoftSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
+            jsonSerializer = new JsonSerializer();
         }
 
         protected override void Init()
         {
-            text = File.ReadAllText(this.SourceDataFilename);
-            jsonSerializer = new JsonSerializer();
+            base.Init();
+            streamReader = new StreamReader(this.MemoryStream);
         }
 
         protected override TTestObject Deserialize()
         {
-            return JsonConvert.DeserializeObject<TTestObject>(text);
+            base.MemoryStream.Position = 0;
+            var jsonTextReader = new JsonTextReader(streamReader) { CloseInput = false };
+
+            return jsonSerializer.Deserialize<TTestObject>(jsonTextReader);
         }
 
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
-            jsonSerializer.Serialize(streamWriter, obj);
+            jsonSerializer.Serialize(streamWriter, base.TestObject);
             streamWriter.Flush();
 
             return stream;
+        }
+
+        public override void Dispose()
+        {
+            streamReader.Dispose();
+            base.Dispose();
         }
     }
 }

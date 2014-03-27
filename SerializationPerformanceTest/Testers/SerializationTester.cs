@@ -7,44 +7,76 @@ using System.Threading;
 
 namespace SerializationPerformanceTest.Testers
 {
-    abstract class SerializationTester
+    abstract public class SerializationTester: IDisposable
     {
+        protected MemoryStream MemoryStream { get; set; }
+
         public abstract void Test(int iterations = 100);
+
+        public virtual void Dispose()
+        {
+            this.MemoryStream.Dispose();
+        }
     }
 
-    abstract class SerializationTester<TTestObject> : SerializationTester
+    /// <summary>
+    /// Base class for testing serialization formats/frameworks.
+    /// </summary>
+    /// <typeparam name="TTestObject">The object that will be tested to Serialize/Deserialize</typeparam>
+    abstract public class SerializationTester<TTestObject> : SerializationTester
     {
-        protected readonly string SourceDataFilename;
+        protected TTestObject TestObject { get; private set; }
 
-        protected SerializationTester(string sourceDataFilename)
+        private bool isInit;
+
+        protected SerializationTester(TTestObject testObject)
         {
-            this.SourceDataFilename = sourceDataFilename;
+            base.MemoryStream = new MemoryStream();
+            this.TestObject = testObject;
         }
 
         /// <summary>
-        /// Init everything needed for Deserialization/Serilization like Serializers, storeage for the data
+        /// Will do any preparations needed before serializing/deserializing
         /// </summary>
-        protected abstract void Init();
+        protected virtual void Init()
+        {
+            isInit = true;
+            this.MemoryStream = Serialize();
+            Console.WriteLine("Size of serialized object : " + base.MemoryStream.Length.ToString("#,0"));
+        }
+
+        /// <summary>
+        /// Will deserialize the TestObject to a .NET Object 
+        /// </summary>
+        /// <returns></returns>
         protected abstract TTestObject Deserialize();
 
-        protected abstract MemoryStream Serialize(TTestObject obj);
+        /// <summary>
+        /// Will serialize the object to a MemoryStream
+        /// </summary>
+        /// <returns></returns>
+        protected abstract MemoryStream Serialize();
 
 
-        // Must do the deseialization test first to have a sample object to serialize later.
+        /// <summary>
+        /// Will run the tests for Size/Speed of Serialization/Deserialization
+        /// </summary>
+        /// <param name="iterations"></param>
         public override void Test(int iterations = 100)
         {
-            this.Init();
+            if (!isInit)
+            {
+                Init();
+            }
 
             TimeSpan timeSpan;
 
             timeSpan = Measure<TTestObject>(this.Deserialize, iterations);
-            Console.WriteLine(this.GetType().Name + "(D) : " + timeSpan.TotalMilliseconds / iterations);
+            Console.WriteLine(this.GetType().Name + "(Deserialize) : " + timeSpan.TotalMilliseconds / iterations);
             GC.Collect();
 
-            var sample = Deserialize();
-            timeSpan = Measure<MemoryStream>(() => this.Serialize(sample), iterations);
-
-            Console.WriteLine(this.GetType().Name + "(S) : " + timeSpan.TotalMilliseconds / iterations);
+            timeSpan = Measure<MemoryStream>(this.Serialize, iterations);
+            Console.WriteLine(this.GetType().Name + "(Serialize) : " + timeSpan.TotalMilliseconds / iterations);
             GC.Collect();
         }
 
@@ -69,5 +101,7 @@ namespace SerializationPerformanceTest.Testers
 
             return sw.Elapsed;
         }
+
+
     }
 }

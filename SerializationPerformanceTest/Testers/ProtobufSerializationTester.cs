@@ -5,44 +5,24 @@ using System.Linq;
 
 namespace SerializationPerformanceTest.Testers
 {
-    class ProtobufSerializationTester<TTestObject> : SerializationTester<TTestObject>, IDisposable
+    class ProtobufSerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private MemoryStream memoryStream;
-
-
-        public ProtobufSerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
+        public ProtobufSerializationTester(TTestObject testObject)
+            : base(testObject)
         {
-        }
-
-        protected override void Init()
-        {
-            memoryStream = new MemoryStream();
-
-            using (var fileStream = new FileStream(base.SourceDataFilename, FileMode.Open))
-            {
-                fileStream.CopyTo(memoryStream);
-            }
         }
 
         protected override TTestObject Deserialize()
         {
-            memoryStream.Seek(0, 0);
-            return ProtoBuf.Serializer.Deserialize<TTestObject>(memoryStream);
+            base.MemoryStream.Seek(0, 0);
+            return ProtoBuf.Serializer.Deserialize<TTestObject>(base.MemoryStream);
         }
         
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
-
-            ProtoBuf.Serializer.Serialize(stream, obj);
-
+            ProtoBuf.Serializer.Serialize(stream, base.TestObject);
             return stream;
-        }
-
-        public void Dispose()
-        {
-            memoryStream.Dispose();
         }
     }
 }

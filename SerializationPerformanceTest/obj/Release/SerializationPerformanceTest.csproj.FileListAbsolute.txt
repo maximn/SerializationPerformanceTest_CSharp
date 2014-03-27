@@ -13,6 +13,6 @@ c:\code\SerializationPerformanceTest\SerializationPerformanceTest\obj\Release\Se
 c:\code\SerializationPerformanceTest\SerializationPerformanceTest\bin\Release\protobuf-net.dll
 c:\code\SerializationPerformanceTest\SerializationPerformanceTest\bin\Release\protobuf-net.pdb
 c:\code\SerializationPerformanceTest\SerializationPerformanceTest\bin\Release\protobuf-net.xml
-c:\code\SerializationPerformanceTest\SerializationPerformanceTest\obj\Release\SerializationPerformanceTest.csprojResolveAssemblyReference.cache
 c:\code\SerializationPerformanceTest\SerializationPerformanceTest\bin\Release\ServiceStack.Text.dll
 c:\code\SerializationPerformanceTest\SerializationPerformanceTest\bin\Release\ServiceStack.Text.xml
+c:\code\SerializationPerformanceTest\SerializationPerformanceTest\obj\Release\SerializationPerformanceTest.csprojResolveAssemblyReference.cache

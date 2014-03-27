@@ -7,47 +7,30 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SerializationPerformanceTest.Testers
 {
-    class BinarySerializationTester<TTestObject> : SerializationTester<TTestObject>, IDisposable
+    class BinarySerializationTester<TTestObject> : SerializationTester<TTestObject>
     {
-        private IFormatter formatter;
-        private MemoryStream memoryStream;
+        private readonly IFormatter formatter;
 
-        public BinarySerializationTester(string sourceDataFilename)
-            : base(sourceDataFilename)
-        {
-        }
-
-        protected override void Init()
+        public BinarySerializationTester(TTestObject testObject)
+            : base(testObject)
         {
             formatter = new BinaryFormatter();
-
-            memoryStream = new MemoryStream();
-
-            using (var fileStream = new FileStream(base.SourceDataFilename, FileMode.Open))
-            {
-                fileStream.CopyTo(memoryStream);
-            }
         }
 
         protected override TTestObject Deserialize()
         {
-            memoryStream.Seek(0, 0);
-            TTestObject deserialize = (TTestObject)formatter.Deserialize(memoryStream);
+            base.MemoryStream.Seek(0, 0);
+            TTestObject deserialize = (TTestObject)formatter.Deserialize(base.MemoryStream);
             return deserialize;
         }
 
 
-        protected override MemoryStream Serialize(TTestObject obj)
+        protected override MemoryStream Serialize()
         {
             var stream = new MemoryStream();
-            formatter.Serialize(stream, obj);
+            formatter.Serialize(stream, base.TestObject);
 
             return stream;
-        }
-
-        public void Dispose()
-        {
-            memoryStream.Dispose();
         }
     }
 }
