@@ -1,4 +1,6 @@
 SerializationPerformanceTest_CSharp
 ===================================
 
-My code for a serialization performance test
+The code for a serialization performance test in my blog post -
+
+http://maxondev.com/serialization-performance-comparison-c-net-formats-frameworks-xmldatacontractserializer-xmlserializer-binaryformatter-json-newtonsoft-servicestack-text/
