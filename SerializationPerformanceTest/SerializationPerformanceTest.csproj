@@ -43,6 +43,9 @@
     <Reference Include="Jil">
       <HintPath>..\packages\Jil.2.1.1\lib\net45\Jil.dll</HintPath>
     </Reference>
+    <Reference Include="MessageShark">
+      <HintPath>..\packages\MessageShark.1.0.1\lib\net40\MessageShark.dll</HintPath>
+    </Reference>
     <Reference Include="MsgPack">
       <HintPath>..\packages\MsgPack.Cli.0.5.5\lib\net45\MsgPack.dll</HintPath>
     </Reference>
@@ -78,6 +81,7 @@
     <Compile Include="Testers\JsonNewtonsoftSerializationTester.cs" />
     <Compile Include="Testers\JsonServiceStackSerializationTester.cs" />
     <Compile Include="Testers\MsgPackSerializationTester.cs" />
+    <Compile Include="Testers\ProtobufMessageSharkSerializationTester.cs" />
     <Compile Include="Testers\ProtobufSerializationTester.cs" />
     <Compile Include="Testers\SerializationTester.cs" />
     <Compile Include="Testers\XmlSerializationTester.cs" />

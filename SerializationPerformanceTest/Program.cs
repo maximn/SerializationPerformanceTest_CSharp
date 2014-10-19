@@ -27,6 +27,7 @@ namespace SerializationPerformanceTest
                     new JsonServiceStackSerializationTester<List<Beer>>(beersList),
                     new JsonJilSerializationTester<List<Beer>>(beersList),
                     new ProtobufSerializationTester<List<Beer>>(beersList),
+                    new ProtobufMessageSharkSerializationTester<List<Beer>>(beersList),
                     new MsgPackSerializationTester<List<Beer>>(beersList),
                     
                     //Single beer
@@ -37,6 +38,7 @@ namespace SerializationPerformanceTest
                     new JsonServiceStackSerializationTester<Beer>(beer),
                     new JsonJilSerializationTester<Beer>(beer),
                     new ProtobufSerializationTester<Beer>(beer),
+                    new ProtobufMessageSharkSerializationTester<Beer>(beer),
                     new MsgPackSerializationTester<Beer>(beer),                    
                 };
 
