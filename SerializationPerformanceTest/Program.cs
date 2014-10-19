@@ -25,6 +25,7 @@ namespace SerializationPerformanceTest
                     new BinarySerializationTester<List<Beer>>(beersList),
                     new JsonNewtonsoftSerializationTester<List<Beer>>(beersList),
                     new JsonServiceStackSerializationTester<List<Beer>>(beersList),
+                    new JsonJilSerializationTester<List<Beer>>(beersList),
                     new ProtobufSerializationTester<List<Beer>>(beersList),
                     new MsgPackSerializationTester<List<Beer>>(beersList),
                     
@@ -34,6 +35,7 @@ namespace SerializationPerformanceTest
                     new BinarySerializationTester<Beer>(beer),
                     new JsonNewtonsoftSerializationTester<Beer>(beer),
                     new JsonServiceStackSerializationTester<Beer>(beer),
+                    new JsonJilSerializationTester<Beer>(beer),
                     new ProtobufSerializationTester<Beer>(beer),
                     new MsgPackSerializationTester<Beer>(beer),                    
                 };
