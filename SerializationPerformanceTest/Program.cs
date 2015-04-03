@@ -27,7 +27,7 @@ namespace SerializationPerformanceTest
                     new JsonServiceStackSerializationTester<List<Beer>>(beersList),
                     new ProtobufSerializationTester<List<Beer>>(beersList),
                     new MsgPackSerializationTester<List<Beer>>(beersList),
-                    
+                    new MicrosoftHadoopAvroSerializationTester<List<Beer>>(beersList),
                     //Single beer
                     new DataContractSerializationTester<Beer>(beer),
                     new XmlSerializationTester<Beer>(beer),
@@ -36,6 +36,7 @@ namespace SerializationPerformanceTest
                     new JsonServiceStackSerializationTester<Beer>(beer),
                     new ProtobufSerializationTester<Beer>(beer),
                     new MsgPackSerializationTester<Beer>(beer),                    
+                    new MicrosoftHadoopAvroSerializationTester<Beer>(beer)
                 };
 
 
@@ -44,7 +45,7 @@ namespace SerializationPerformanceTest
             {
                 using (tester)
                 {
-                    tester.Test();
+                    tester.Test(1000);
 
                     Console.WriteLine();
                 }
