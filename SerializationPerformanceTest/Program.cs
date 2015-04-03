@@ -28,6 +28,7 @@ namespace SerializationPerformanceTest
                     new ProtobufSerializationTester<List<Beer>>(beersList),
                     new MsgPackSerializationTester<List<Beer>>(beersList),
                     new MicrosoftHadoopAvroSerializationTester<List<Beer>>(beersList),
+                    
                     //Single beer
                     new DataContractSerializationTester<Beer>(beer),
                     new XmlSerializationTester<Beer>(beer),
@@ -52,7 +53,7 @@ namespace SerializationPerformanceTest
 
                 GC.Collect();
             }
-
+            Console.ReadKey();
         }
     }
 }

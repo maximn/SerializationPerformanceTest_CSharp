@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Xml.Serialization;
 using HtmlAgilityPack;
+using System.Text;
 
 namespace SerializationPerformanceTest.TestData.BelgianBeer
 {
@@ -13,10 +14,18 @@ namespace SerializationPerformanceTest.TestData.BelgianBeer
         public static List<Beer> GetDataFromXML()
         {
             var serializer = new XmlSerializer(typeof(List<Beer>));
-            using (var fs = new FileStream(@".\..\..\TestData\BelgianBeer\Data\beers.xml", FileMode.Open))
+            var filePath = @".\..\..\TestData\BelgianBeer\Data\beers.xml";
+            if (!File.Exists(filePath))
+            {
+                var stream = new MemoryStream();
+                serializer.Serialize(stream, GetDataFromWikipedia());
+                File.WriteAllText(filePath, Encoding.UTF8.GetString(stream.ToArray()));
+            }
+
+            using (var fs = new FileStream(filePath, FileMode.Open))
             {
                 var deserialize = serializer.Deserialize(fs);
-                return (List<Beer>) deserialize;
+                return (List<Beer>)deserialize;
             }
         }
 

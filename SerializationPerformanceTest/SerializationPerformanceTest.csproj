@@ -84,18 +84,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="TestData\BelgianBeer\Data\beer.bin" />
-    <None Include="TestData\BelgianBeer\Data\beer.datacontract" />
-    <None Include="TestData\BelgianBeer\Data\beer.msgpack" />
-    <None Include="TestData\BelgianBeer\Data\beer.protobuf" />
-    <None Include="TestData\BelgianBeer\Data\beers.bin" />
-    <None Include="TestData\BelgianBeer\Data\beers.datacontract" />
-    <None Include="TestData\BelgianBeer\Data\beers.msgpack" />
-    <None Include="TestData\BelgianBeer\Data\beers.protobuf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\BelgianBeer\Data\beer.xml" />
-    <Content Include="TestData\BelgianBeer\Data\beers.xml" />
+    <Folder Include="TestData\BelgianBeer\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
