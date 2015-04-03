@@ -45,7 +45,7 @@ namespace SerializationPerformanceTest
             {
                 using (tester)
                 {
-                    tester.Test(1000);
+                    tester.Test();
 
                     Console.WriteLine();
                 }
