@@ -11,7 +11,7 @@ namespace SerializationPerformanceTest.Testers
     {
         protected MemoryStream MemoryStream { get; set; }
 
-        public abstract void Test(int iterations = 100);
+        public abstract void Test(int iterations = 500);
 
         public virtual void Dispose()
         {
@@ -62,7 +62,7 @@ namespace SerializationPerformanceTest.Testers
         /// Will run the tests for Size/Speed of Serialization/Deserialization
         /// </summary>
         /// <param name="iterations"></param>
-        public override void Test(int iterations = 100)
+        public override void Test(int iterations = 500)
         {
             if (!isInit)
             {

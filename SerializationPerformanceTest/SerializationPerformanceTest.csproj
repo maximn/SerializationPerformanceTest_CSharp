@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SerializationPerformanceTest</RootNamespace>
     <AssemblyName>SerializationPerformanceTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -35,21 +35,27 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MsgPack">
-      <HintPath>..\packages\MsgPack.Cli.0.4.3\lib\net40-client\MsgPack.dll</HintPath>
+    <Reference Include="Microsoft.Hadoop.Avro">
+      <HintPath>..\packages\Microsoft.Hadoop.Avro.1.5.6\lib\net45\Microsoft.Hadoop.Avro.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack, Version=0.5.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MsgPack.Cli.0.5.11\lib\net45\MsgPack.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\packages\ServiceStack.Text.4.0.15\lib\net40\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=4.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.4.0.38\lib\net40\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +75,7 @@
     <Compile Include="Testers\DataContractSerializationTester.cs" />
     <Compile Include="Testers\JsonNewtonsoftSerializationTester.cs" />
     <Compile Include="Testers\JsonServiceStackSerializationTester.cs" />
+    <Compile Include="Testers\MicrosoftHadoopAvroSerializationTester.cs" />
     <Compile Include="Testers\MsgPackSerializationTester.cs" />
     <Compile Include="Testers\ProtobufSerializationTester.cs" />
     <Compile Include="Testers\SerializationTester.cs" />
@@ -77,18 +84,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="TestData\BelgianBeer\Data\beer.bin" />
-    <None Include="TestData\BelgianBeer\Data\beer.datacontract" />
-    <None Include="TestData\BelgianBeer\Data\beer.msgpack" />
-    <None Include="TestData\BelgianBeer\Data\beer.protobuf" />
-    <None Include="TestData\BelgianBeer\Data\beers.bin" />
-    <None Include="TestData\BelgianBeer\Data\beers.datacontract" />
-    <None Include="TestData\BelgianBeer\Data\beers.msgpack" />
-    <None Include="TestData\BelgianBeer\Data\beers.protobuf" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\BelgianBeer\Data\beer.xml" />
-    <Content Include="TestData\BelgianBeer\Data\beers.xml" />
+    <Folder Include="TestData\BelgianBeer\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
