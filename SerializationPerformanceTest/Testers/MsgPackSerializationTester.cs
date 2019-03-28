@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using MsgPack.Serialization;
+using System.IO;
 
 namespace SerializationPerformanceTest.Testers
 {
@@ -10,11 +7,10 @@ namespace SerializationPerformanceTest.Testers
     {
         private readonly MessagePackSerializer<TTestObject> serializer;
 
-
         public MsgPackSerializationTester(TTestObject testObject)
             : base(testObject)
         {
-            serializer = MessagePackSerializer.Create<TTestObject>();            
+            serializer = MessagePackSerializer.Get<TTestObject>();            
         }
 
 
@@ -30,7 +26,5 @@ namespace SerializationPerformanceTest.Testers
             serializer.Pack(stream, base.TestObject);
             return stream;
         }
-
     }
-    
 }
