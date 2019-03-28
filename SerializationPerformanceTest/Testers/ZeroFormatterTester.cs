@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using ZeroFormatter;
 
 namespace SerializationPerformanceTest.Testers
@@ -8,11 +9,18 @@ namespace SerializationPerformanceTest.Testers
         public ZeroFormatterTester(TTestObject testObject)
             : base(testObject) { }
 
-        protected override TTestObject Deserialize() => ZeroFormatterSerializer.Deserialize<TTestObject>(MemoryStream);
-
-        protected override MemoryStream Serialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
+            MemoryStream.Seek(0, 0);
+            return ZeroFormatterSerializer.Deserialize<TTestObject>(MemoryStream);
+        }
+
+        protected override MemoryStream Serialize(Stopwatch sw)
+        {
+            sw.Stop();
             var stream = new MemoryStream();
+            sw.Start();
+
             ZeroFormatterSerializer.Serialize(stream, TestObject);
             return stream;
         }

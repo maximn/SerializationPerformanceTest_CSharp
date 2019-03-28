@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using System.IO;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace SerializationPerformanceTest.Testers
@@ -26,21 +23,25 @@ namespace SerializationPerformanceTest.Testers
             streamReader = new StreamReader(this.MemoryStream);
         }
 
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
-            base.MemoryStream.Position = 0;
+            sw.Stop();
+            MemoryStream.Seek(0, 0);
             var jsonTextReader = new JsonTextReader(streamReader) { CloseInput = false };
+            sw.Start();
 
             return jsonSerializer.Deserialize<TTestObject>(jsonTextReader);
         }
 
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
-            jsonSerializer.Serialize(streamWriter, base.TestObject);
-            streamWriter.Flush();
+            sw.Start();
 
+            jsonSerializer.Serialize(streamWriter, TestObject);
+            streamWriter.Flush();
             return stream;
         }
 

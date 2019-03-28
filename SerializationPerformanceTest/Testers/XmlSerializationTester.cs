@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
 using System.Xml.Serialization;
 
 namespace SerializationPerformanceTest.Testers
@@ -19,17 +14,20 @@ namespace SerializationPerformanceTest.Testers
             
         }
 
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
             base.MemoryStream.Seek(0, 0);
             var deserialize = (TTestObject)serializer.Deserialize(base.MemoryStream);
             return deserialize;
         }
 
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
-            serializer.Serialize(stream, base.TestObject);
+            sw.Start();
+
+            serializer.Serialize(stream, TestObject);
             return stream;
         }
     }

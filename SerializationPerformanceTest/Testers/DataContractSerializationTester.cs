@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace SerializationPerformanceTest.Testers
 {
@@ -17,18 +14,19 @@ namespace SerializationPerformanceTest.Testers
             serializer = new DataContractSerializer(typeof(TTestObject));
         }
 
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
-            base.MemoryStream.Seek(0, 0);
-            return (TTestObject)serializer.ReadObject(base.MemoryStream);
+            MemoryStream.Seek(0, 0);
+            return (TTestObject)serializer.ReadObject(MemoryStream);
         }
         
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
+            sw.Start();
 
-            serializer.WriteObject(stream, base.TestObject);
-
+            serializer.WriteObject(stream, TestObject);
             return stream;
         }
     }

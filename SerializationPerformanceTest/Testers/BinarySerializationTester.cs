@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -17,19 +15,20 @@ namespace SerializationPerformanceTest.Testers
             formatter = new BinaryFormatter();
         }
 
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
-            base.MemoryStream.Seek(0, 0);
-            TTestObject deserialize = (TTestObject)formatter.Deserialize(base.MemoryStream);
-            return deserialize;
+            MemoryStream.Seek(0, 0);
+            return (TTestObject)formatter.Deserialize(MemoryStream);
         }
 
 
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
-            formatter.Serialize(stream, base.TestObject);
+            sw.Start();
 
+            formatter.Serialize(stream, TestObject);
             return stream;
         }
     }

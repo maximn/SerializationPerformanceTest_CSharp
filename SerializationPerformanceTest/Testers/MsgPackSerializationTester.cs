@@ -1,4 +1,5 @@
 using MsgPack.Serialization;
+using System.Diagnostics;
 using System.IO;
 
 namespace SerializationPerformanceTest.Testers
@@ -13,17 +14,19 @@ namespace SerializationPerformanceTest.Testers
             serializer = MessagePackSerializer.Get<TTestObject>();            
         }
 
-
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
-            base.MemoryStream.Position = 0;
+            MemoryStream.Seek(0, 0);
             return serializer.Unpack(base.MemoryStream);
         }
         
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
-            serializer.Pack(stream, base.TestObject);
+            sw.Start();
+
+            serializer.Pack(stream, TestObject);
             return stream;
         }
     }

@@ -42,19 +42,19 @@ namespace SerializationPerformanceTest.Testers
         /// Will deserialize the TestObject to a .NET Object 
         /// </summary>
         /// <returns></returns>
-        protected abstract TTestObject Deserialize();
+        protected abstract TTestObject Deserialize(Stopwatch sw);
 
         /// <summary>
         /// Will serialize the object to a MemoryStream
         /// </summary>
         /// <returns></returns>
-        protected abstract MemoryStream Serialize();
+        protected abstract MemoryStream Serialize(Stopwatch sw);
 
         /// <summary>
         /// Will run the tests for Size/Speed of Serialization/Deserialization
         /// </summary>
         /// <param name="iterations"></param>
-        public override TestReport Test(int iterations = 100)
+        public sealed override TestReport Test(int iterations = 100)
         {
             if (!isInit)
             {
@@ -70,17 +70,17 @@ namespace SerializationPerformanceTest.Testers
             return new TestReport(MemoryStream.Length, serialzation, deserizalization, iterations, GetType());
         }
 
-        private TimeSpan Measure<TTest>(Func<TTest> testFunc, int iterations)
+        private TimeSpan Measure<TTest>(Func<Stopwatch, TTest> testFunc, int iterations)
         {
             var list = new TTest[iterations];
 
             //warm up lazy initialized classes
-            TTest warmup = testFunc.Invoke();
+            TTest warmup = testFunc.Invoke(dummy);
 
             Stopwatch sw = Stopwatch.StartNew();
             for (int i = 0; i < iterations; i++)
             {
-                list[i] = testFunc.Invoke();
+                list[i] = testFunc.Invoke(sw);
             }
 
             sw.Stop();
@@ -89,7 +89,6 @@ namespace SerializationPerformanceTest.Testers
 
             return sw.Elapsed;
         }
-
-
+        private readonly Stopwatch dummy = new Stopwatch();
     }
 }

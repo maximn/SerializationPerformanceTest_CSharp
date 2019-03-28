@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using ServiceStack.Text;
 
@@ -7,7 +8,6 @@ namespace SerializationPerformanceTest.Testers
     {
         private readonly TypeSerializer<TTestObject> serializer;
         private StreamReader streamReader;
-
 
         public JsonServiceStackSerializationTester(TTestObject testObject)
             : base(testObject)
@@ -22,25 +22,27 @@ namespace SerializationPerformanceTest.Testers
             streamReader = new StreamReader(this.MemoryStream);
         }
 
-        protected override TTestObject Deserialize()
+        protected override TTestObject Deserialize(Stopwatch sw)
         {
-            base.MemoryStream.Position = 0;
-            return serializer.DeserializeFromReader(this.streamReader);
+            MemoryStream.Seek(0, 0);
+            return serializer.DeserializeFromReader(streamReader);
         }
 
-        protected override MemoryStream Serialize()
+        protected override MemoryStream Serialize(Stopwatch sw)
         {
+            sw.Stop();
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
+            sw.Start();
+
             serializer.SerializeToWriter(base.TestObject, streamWriter);
             streamWriter.Flush();
-
             return stream;
         }
 
         public override void Dispose()
         {
-            this.streamReader.Dispose();
+            streamReader.Dispose();
             base.Dispose();
         }
     }
