@@ -20,6 +20,7 @@
     <PackageReference Include="MsgPack.Cli" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="protobuf-net" Version="2.4.0" />
+    <PackageReference Include="Qowaiv" Version="3.2.1" />
     <PackageReference Include="ServiceStack.Text" Version="5.5.0" />
     <PackageReference Include="ZeroFormatter" Version="1.6.4" />
   </ItemGroup>

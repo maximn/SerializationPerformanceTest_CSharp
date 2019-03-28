@@ -13,7 +13,7 @@ namespace SerializationPerformanceTest
             var beers = BelgianBeerDataRetriever.GetDataFromXML();
             var beer = beers.First();
 
-            var testers = new SerializationTester[]
+            var lists = new SerializationTester[]
             {
                 //List of beers
                 new DataContractSerializationTester<List<Beer>>(beers),
@@ -24,7 +24,10 @@ namespace SerializationPerformanceTest
                 new ProtobufSerializationTester<List<Beer>>(beers),
                 new MsgPackSerializationTester<List<Beer>>(beers),
                 new ZeroFormatterTester<List<Beer>>(beers),
-                
+            };
+
+            var singles = new SerializationTester[]
+            {
                 //Single beer
                 new DataContractSerializationTester<Beer>(beer),
                 new XmlSerializationTester<Beer>(beer),
@@ -36,16 +39,34 @@ namespace SerializationPerformanceTest
                 new ZeroFormatterTester<Beer>(beer),
             };
 
-            foreach (var tester in testers)
+            var comparer = new TestReportComparer();
+
+            Console.WriteLine("Large sized");
+            Test(lists, comparer);
+
+            Console.WriteLine();
+            Console.WriteLine("Small sized");
+            Test(singles, comparer);
+
+            Console.ReadLine();
+        }
+
+        private static void Test(IEnumerable<SerializationTester> lists, IComparer<TestReport> comparer)
+        {
+            var reports = new List<TestReport>();
+            foreach (var tester in lists)
             {
                 using (tester)
                 {
-                    tester.Test();
-
-                    Console.WriteLine();
+                    reports.Add(tester.Test());
                 }
-
                 GC.Collect();
+            }
+            reports.Sort(comparer);
+
+            foreach(var report in reports)
+            {
+                Console.WriteLine(report);
             }
         }
     }

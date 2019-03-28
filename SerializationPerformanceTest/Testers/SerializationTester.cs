@@ -1,22 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
 
 namespace SerializationPerformanceTest.Testers
 {
-    abstract public class SerializationTester: IDisposable
+    abstract public class SerializationTester : IDisposable
     {
         protected MemoryStream MemoryStream { get; set; }
 
-        public abstract void Test(int iterations = 100);
+        public abstract TestReport Test(int iterations = 100);
 
-        public virtual void Dispose()
-        {
-            this.MemoryStream.Dispose();
-        }
+        public virtual void Dispose() => MemoryStream.Dispose();
     }
 
     /// <summary>
@@ -41,8 +35,7 @@ namespace SerializationPerformanceTest.Testers
         protected virtual void Init()
         {
             isInit = true;
-            this.MemoryStream = Serialize();
-            Console.WriteLine("Size of serialized object : " + base.MemoryStream.Length.ToString("#,0"));
+            MemoryStream = Serialize();
         }
 
         /// <summary>
@@ -57,42 +50,37 @@ namespace SerializationPerformanceTest.Testers
         /// <returns></returns>
         protected abstract MemoryStream Serialize();
 
-
         /// <summary>
         /// Will run the tests for Size/Speed of Serialization/Deserialization
         /// </summary>
         /// <param name="iterations"></param>
-        public override void Test(int iterations = 100)
+        public override TestReport Test(int iterations = 100)
         {
             if (!isInit)
             {
                 Init();
             }
 
-            TimeSpan timeSpan;
-
-            timeSpan = Measure<TTestObject>(this.Deserialize, iterations);
-            Console.WriteLine(this.GetType().Name + "(Deserialize) : " + timeSpan.TotalMilliseconds / iterations);
+            var deserizalization = Measure<TTestObject>(this.Deserialize, iterations);
             GC.Collect();
 
-            timeSpan = Measure<MemoryStream>(this.Serialize, iterations);
-            Console.WriteLine(this.GetType().Name + "(Serialize) : " + timeSpan.TotalMilliseconds / iterations);
+            var serialzation = Measure<MemoryStream>(this.Serialize, iterations);
             GC.Collect();
+
+            return new TestReport(MemoryStream.Length, serialzation, deserizalization, iterations, GetType());
         }
 
-        private TimeSpan Measure<TTestObject>(Func<TTestObject> testFunc, int iterations)
+        private TimeSpan Measure<TTest>(Func<TTest> testFunc, int iterations)
         {
-            var list = new List<TTestObject>(iterations);
+            var list = new TTest[iterations];
 
             //warm up lazy initialized classes
-            TTestObject warmup = testFunc.Invoke();
+            TTest warmup = testFunc.Invoke();
 
             Stopwatch sw = Stopwatch.StartNew();
             for (int i = 0; i < iterations; i++)
             {
-                TTestObject obj = testFunc.Invoke();
-
-                list.Add(obj);
+                list[i] = testFunc.Invoke();
             }
 
             sw.Stop();
