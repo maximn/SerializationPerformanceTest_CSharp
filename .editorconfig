@@ -1,0 +1,14 @@
+root = true
+[*]
+end_of_line=crlf
+insert_final_newline = true
+
+# Code files
+[*.{cs}]
+indent_style = space
+indent_size = 4
+
+# Project files
+[*.{csproj,props}]
+indent_style = space
+indent_size = 2
