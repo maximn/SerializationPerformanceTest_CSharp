@@ -10,20 +10,21 @@ namespace SerializationPerformanceTest
     {
         private static void Main()
         {
-            List<Beer> beersList = BelgianBeerDataRetriever.GetDataFromXML();
-            Beer beer = beersList.First();
+            var beers = BelgianBeerDataRetriever.GetDataFromXML();
+            var beer = beers.First();
 
             var testers = new SerializationTester[]
             {
                 //List of beers
-                new DataContractSerializationTester<List<Beer>>(beersList),
-                new XmlSerializationTester<List<Beer>>(beersList),
-                new BinarySerializationTester<List<Beer>>(beersList),
-                new JsonNewtonsoftSerializationTester<List<Beer>>(beersList),
-                new JsonServiceStackSerializationTester<List<Beer>>(beersList),
-                new ProtobufSerializationTester<List<Beer>>(beersList),
-                new MsgPackSerializationTester<List<Beer>>(beersList),
-                    
+                new DataContractSerializationTester<List<Beer>>(beers),
+                new XmlSerializationTester<List<Beer>>(beers),
+                new BinarySerializationTester<List<Beer>>(beers),
+                new JsonNewtonsoftSerializationTester<List<Beer>>(beers),
+                new JsonServiceStackSerializationTester<List<Beer>>(beers),
+                new ProtobufSerializationTester<List<Beer>>(beers),
+                new MsgPackSerializationTester<List<Beer>>(beers),
+                new ZeroFormatterTester<List<Beer>>(beers),
+                
                 //Single beer
                 new DataContractSerializationTester<Beer>(beer),
                 new XmlSerializationTester<Beer>(beer),
@@ -32,6 +33,7 @@ namespace SerializationPerformanceTest
                 new JsonServiceStackSerializationTester<Beer>(beer),
                 new ProtobufSerializationTester<Beer>(beer),
                 new MsgPackSerializationTester<Beer>(beer),
+                new ZeroFormatterTester<Beer>(beer),
             };
 
             foreach (var tester in testers)

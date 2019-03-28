@@ -21,6 +21,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="protobuf-net" Version="2.4.0" />
     <PackageReference Include="ServiceStack.Text" Version="5.5.0" />
+    <PackageReference Include="ZeroFormatter" Version="1.6.4" />
   </ItemGroup>
 
 </Project>
