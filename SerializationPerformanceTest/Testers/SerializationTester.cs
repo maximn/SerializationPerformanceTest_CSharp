@@ -35,7 +35,7 @@ namespace SerializationPerformanceTest.Testers
         protected virtual void Init()
         {
             isInit = true;
-            MemoryStream = Serialize();
+            MemoryStream = Serialize(dummy);
         }
 
         /// <summary>
