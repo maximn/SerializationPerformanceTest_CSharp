@@ -1,10 +1,9 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml.Serialization;
-using HtmlAgilityPack;
 
 namespace SerializationPerformanceTest.TestData.BelgianBeer
 {
@@ -13,13 +12,12 @@ namespace SerializationPerformanceTest.TestData.BelgianBeer
         public static List<Beer> GetDataFromXML()
         {
             var serializer = new XmlSerializer(typeof(List<Beer>));
-            using (var fs = new FileStream(@".\..\..\TestData\BelgianBeer\Data\beers.xml", FileMode.Open))
+            using (var stream = typeof(Beer).Assembly.GetManifestResourceStream("SerializationPerformanceTest.TestData.BelgianBeer.Data.beers.xml"))
             {
-                var deserialize = serializer.Deserialize(fs);
-                return (List<Beer>) deserialize;
+                var deserialize = serializer.Deserialize(stream);
+                return (List<Beer>)deserialize;
             }
         }
-
 
         public static List<Beer> GetDataFromWikipedia()
         {
